@@ -12,6 +12,13 @@ const fontSans = Sora({
 export const metadata = {
   title: "AgentOS",
   description: "AI-powered chat interface",
+  icons: {
+    icon: [
+      { url: "/agentos-logo.png", type: "image/png", sizes: "32x32" },
+      { url: "/agentos-logo.png", type: "image/png", sizes: "16x16" },
+    ],
+    apple: "/agentos-logo.png",
+  },
 }
 
 export default function RootLayout({

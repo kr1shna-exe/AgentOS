@@ -1,4 +1,4 @@
-import geminiClient from "../model/gemini";
+import geminiClient from "../llm/gemini";
 import type { Tool } from "./types";
 
 const MODEL = "gemini-2.5-flash";

@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { cn } from "@workspace/ui/lib/utils"
 import { Message } from "../message"
 import { ChatInput } from "../chatInput"
 import { Header } from "../header"
@@ -17,9 +18,10 @@ interface ChatContainerProps {
   messages?: ChatMessage[]
   onSendMessage?: (message: string) => void
   isLoading?: boolean
+  sidebarOpen?: boolean
 }
 
-export function ChatContainer({ messages = [], onSendMessage, isLoading = false }: ChatContainerProps) {
+export function ChatContainer({ messages = [], onSendMessage, isLoading = false, sidebarOpen = true }: ChatContainerProps) {
   const messagesEndRef = React.useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
@@ -32,8 +34,7 @@ export function ChatContainer({ messages = [], onSendMessage, isLoading = false 
 
   return (
     <div className="flex flex-col h-screen">
-      {/* Header */}
-      <Header />
+      <Header sidebarOpen={sidebarOpen} />
 
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto pt-16 pb-32">
@@ -63,8 +64,13 @@ export function ChatContainer({ messages = [], onSendMessage, isLoading = false 
         )}
       </div>
 
-      {/* Fixed Input at Bottom */}
-      <div className="fixed bottom-0 left-0 right-0 lg:left-64">
+      {/* Fixed Input at Bottom Center */}
+      <div
+        className={cn(
+          "fixed bottom-0 right-0 transition-[left] duration-300",
+          sidebarOpen ? "left-64" : "left-0"
+        )}
+      >
         <ChatInput onSend={onSendMessage} />
       </div>
     </div>

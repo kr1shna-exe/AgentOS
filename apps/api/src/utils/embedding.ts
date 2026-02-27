@@ -1,4 +1,4 @@
-import geminiClient from "../model/gemini";
+import geminiClient from "../llm/gemini";
 
 export interface Chunk {
   text: string;

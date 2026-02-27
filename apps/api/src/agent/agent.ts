@@ -1,5 +1,5 @@
 import { FunctionCallingConfigMode, Type, type Content, type FunctionDeclaration } from "@google/genai";
-import geminiClient from "../model/gemini";
+import geminiClient from "../llm/gemini";
 import { createAgentRun, updateAgentRun } from "../store/agent.store";
 import { registry } from "../tools/registry";
 import { generatePlan } from "./planner";

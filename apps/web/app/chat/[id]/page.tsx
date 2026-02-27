@@ -2,13 +2,15 @@
 
 import * as React from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { SidebarProvider, useSidebar } from "@/components/sidebar/sidebarContext"
 import { Sidebar } from "@/components/sidebar/sidebarMain"
 import { ChatContainer } from "@/components/chat/chatContainer"
 import { useChat } from "@/hooks/useChat"
 
-export default function ChatPage() {
+function ChatPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { isOpen } = useSidebar()
   const initialQuestion = searchParams.get("q")
 
   const { messages, isLoading, sendMessage } = useChat()
@@ -19,29 +21,28 @@ export default function ChatPage() {
     }
   }, [initialQuestion, messages.length, sendMessage])
 
-  const handleLoginClick = () => {
-    router.push("/login")
-  }
-
-  const handleNewChat = () => {
-    const newChatId = Date.now().toString()
-    router.push(`/chat/${newChatId}`)
-  }
-
-  const handleSendMessage = (message: string) => {
-    sendMessage(message)
-  }
+  const handleLoginClick = () => router.push("/login")
+  const handleNewChat = () => router.push(`/chat/${Date.now()}`)
 
   return (
     <div className="flex h-screen bg-[#FAFAFA] dark:bg-black">
       <Sidebar onLoginClick={handleLoginClick} onNewChat={handleNewChat} />
-      <main className="flex-1 lg:ml-64">
-        <ChatContainer 
-          messages={messages} 
-          onSendMessage={handleSendMessage}
+      <main className={isOpen ? "flex-1 lg:ml-64" : "flex-1 ml-0"}>
+        <ChatContainer
+          messages={messages}
+          onSendMessage={sendMessage}
           isLoading={isLoading}
+          sidebarOpen={isOpen}
         />
       </main>
     </div>
+  )
+}
+
+export default function ChatPage() {
+  return (
+    <SidebarProvider>
+      <ChatPageContent />
+    </SidebarProvider>
   )
 }

@@ -1,25 +1,33 @@
 import * as React from "react"
-import { Button } from "@workspace/ui/components/button"
-import { Logo } from "@/components/logo"
+
+const API_BASE = process.env.NEXT_PUBLIC_SERVER_API_URL ?? "http://localhost:8000"
+const AUTH_URL = `${API_BASE.replace(/\/$/, "")}/api/v1/auth`
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center px-4">
-      {/* Main Content */}
-      <div className="flex flex-col items-center gap-8 max-w-md w-full">
+    <div
+      className="min-h-screen flex flex-col items-center justify-center px-4 relative"
+      style={{ backgroundColor: "#FFD1A3" }}
+    >
+      <div className="flex flex-col items-center gap-8 max-w-md w-full flex-1 justify-center">
         {/* Logo */}
-        <Logo size="lg" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/agentos-logo.png"
+          alt="AgentOS"
+          className="w-16 h-16 object-contain"
+        />
 
         {/* Heading */}
-        <h1 className="text-2xl font-semibold text-white">
+        <h1 className="text-2xl font-semibold text-gray-900">
           Sign in to AgentOS
         </h1>
 
         {/* Login Card */}
-        <div className="w-full bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-8">
-          <Button
-            className="w-full bg-transparent hover:bg-gray-800/50 text-white border border-gray-700 hover:border-gray-600 gap-3 h-12"
-            variant="outline"
+        <div className="w-full bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-8 shadow-sm">
+          <a
+            href={AUTH_URL}
+            className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-800 transition-colors hover:bg-gray-50"
           >
             <svg
               width="18"
@@ -37,7 +45,7 @@ export default function LoginPage() {
                 fill="#34A853"
               />
               <path
-                d="M3.96409 10.7099C3.78409 10.1699 3.68182 9.59308 3.68182 8.99989C3.68182 8.40671 3.78409 7.82989 3.96409 7.28989V4.95807H0.957273C0.347727 6.17353 0 7.54762 0 8.99989C0 10.4522 0.347727 11.8263 0.957273 13.0417L3.96409 10.7099Z"
+                d="M3.96409 10.7099C3.96409 10.1699 3.68182 9.59308 3.68182 8.99989C3.68182 8.40671 3.96409 7.82989 3.96409 7.28989V4.95807H0.957273C0.347727 6.17353 0 7.54762 0 8.99989C0 10.4522 0.347727 11.8263 0.957273 13.0417L3.96409 10.7099Z"
                 fill="#FBBC05"
               />
               <path
@@ -46,20 +54,20 @@ export default function LoginPage() {
               />
             </svg>
             Continue with Google
-          </Button>
-        </div>
-
-        {/* Footer */}
-        <div className="text-center text-sm text-gray-400">
-          <a href="#" className="hover:text-gray-300 transition-colors">
-            Terms of Service
-          </a>
-          {" and "}
-          <a href="#" className="hover:text-gray-300 transition-colors">
-            Privacy Policy
           </a>
         </div>
       </div>
+
+      {/* Footer - fixed at bottom center */}
+      <footer className="absolute bottom-6 left-0 right-0 text-center text-sm text-gray-600">
+        <a href="#" className="hover:text-gray-800 transition-colors">
+          Terms of Service
+        </a>
+        {" and "}
+        <a href="#" className="hover:text-gray-800 transition-colors">
+          Privacy Policy
+        </a>
+      </footer>
     </div>
   )
 }
