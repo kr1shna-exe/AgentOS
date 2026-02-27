@@ -1,9 +1,10 @@
 import { FunctionCallingConfigMode, Type, type Content, type FunctionDeclaration } from "@google/genai";
 import geminiClient from "../model/gemini";
-import { createAgentRun, updateAgentRun } from "../repositories/agent.repo";
+import { createAgentRun, updateAgentRun } from "../store/agent.store";
 import { registry } from "../tools/registry";
 import { generatePlan } from "./planner";
 import type { AgentContext, AgentResult, Citation, SSEEvent, Step } from "./types";
+import buildSystemPrompt from "../prompt/prompt";
   
   const MODEL = "gemini-2.5-flash";
   
@@ -25,24 +26,8 @@ import type { AgentContext, AgentResult, Citation, SSEEvent, Step } from "./type
       },
       required: ["answer"],
     },
-  };
+};
   
-  function buildSystemPrompt(task: string, plan: string): string {
-    return `You are an autonomous AI research agent. Complete the user's task by using tools step by step.
-  
-  Task: ${task}
-  
-  Your plan:
-  ${plan}
-  
-  Rules:
-  - Always include your reasoning in the "thought" parameter when calling any tool
-  - Analyse each tool result before deciding the next step
-  - Use vector_search or drive_retrieval for questions about the user's own documents
-  - Use web_search then web_scrape for up-to-date information from the internet
-  - Call "finish" as soon as you have enough information to give a complete answer
-  - Never call the same tool twice with identical arguments`;
-  }
   
 export async function* runAgent( task: string, userId: string, maxSteps = 10 ): AsyncGenerator<SSEEvent> {
     const run = await createAgentRun(userId, task, maxSteps);
@@ -124,13 +109,23 @@ export async function* runAgent( task: string, userId: string, maxSteps = 10 ): 
         let toolResult;
         try {
           const tool = registry.getTool(toolName);
-          toolResult = await tool.execute(toolArgs, context);
+          if (!tool) {
+            toolResult = {
+              success: false,
+              data: null,
+              error: `Unknown tool: ${toolName}`,
+            };
+          } else {
+            toolResult = await tool.execute(toolArgs, context);
+          }
         } catch (err) {
-          toolResult = {
-            success: false,
-            data: null,
-            error: err instanceof Error ? err.message : "Tool execution failed",
-          };
+          if (!toolResult) {
+            toolResult = {
+              success: false,
+              data: null,
+              error: err instanceof Error ? err.message : "Tool execution failed",
+            };
+          }
         }
   
         step.result = toolResult;

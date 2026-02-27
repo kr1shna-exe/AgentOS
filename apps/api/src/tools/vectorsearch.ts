@@ -50,9 +50,9 @@ export const vectorSearchTool: Tool = {
     }
 
     try {
-      const { embedText } = await import("../embeddings/embedder");
+      const { embedText } = await import("../utils/embedding");
       const { resultsToCitations, searchSimilar } = await import(
-        "../embeddings/store"
+        "../store/vector.store"
       );
 
       const queryVector = await embedText(query);

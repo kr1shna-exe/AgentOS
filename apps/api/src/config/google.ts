@@ -1,4 +1,5 @@
 import { google } from "googleapis";
+import { env } from "./env";
 
 export const SCOPES = [
   "https://www.googleapis.com/auth/userinfo.email",
@@ -8,9 +9,9 @@ export const SCOPES = [
 
 export function createOAuth2Client() {
   return new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
-    process.env.GOOGLE_REDIRECT_URI
+    env.GOOGLE_CLIENT_ID,
+    env.GOOGLE_SECRET_ID,
+    env.GOOGLE_CALLBACK_API
   );
 }
 

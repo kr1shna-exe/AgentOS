@@ -1,13 +1,14 @@
 import type { Response } from "express";
-import { Router } from "express";
-import { listDriveFiles } from "../repositories/drive.repo";
-import { syncDrive } from "../drive/ingest";
-import { authMiddleware, type AuthRequest } from "src/middleware/auth.middleware";
+import { listDriveFiles } from "../store/drive.store";
+import { syncDrive as runDriveSync } from "../drive/ingest.drive";
+import type { AuthRequest } from "../middleware/auth.middleware";
 
-driveRouter.use(authMiddleware);
+export const syncDrive = async (req: AuthRequest, res: Response) => {
+  const emit = (event: object) => {
+    res.write(`data: ${JSON.stringify(event)}\n\n`);
+  };
 
-export const syncDrive = async (req: Request, res: Response ) => {
-    try {
+  try {
     const userId = req.user!.userId;
     const mode = req.body.mode === "incremental" ? "incremental" : "full";
 
@@ -16,11 +17,7 @@ export const syncDrive = async (req: Request, res: Response ) => {
     res.setHeader("Connection", "keep-alive");
     res.flushHeaders();
 
-    const emit = (event: object) => {
-        res.write(`data: ${JSON.stringify(event)}\n\n`);
-    };
-
-    for await (const syncEvent of syncDrive(userId, mode)) {
+    for await (const syncEvent of runDriveSync(userId, mode)) {
       emit(syncEvent);
       if (syncEvent.type === "completed" || syncEvent.type === "error") break;
     }
@@ -33,7 +30,7 @@ export const syncDrive = async (req: Request, res: Response ) => {
 };
 
 // List all synced Drive files for the authenticated user.
-export const syncedDriveFiles = async (req: Request, res: Response ) => {
+export const syncedDriveFiles = async (req: AuthRequest, res: Response) => {
   try {
     const files = await listDriveFiles(req.user!.userId);
     res.status(200).json({ 
@@ -42,4 +39,4 @@ export const syncedDriveFiles = async (req: Request, res: Response ) => {
     console.error("Failed to list drive files:", err);
     res.status(500).json({ error: "Failed to retrieve drive files" });
   }
-});
+};

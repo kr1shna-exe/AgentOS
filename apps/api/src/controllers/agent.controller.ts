@@ -1,27 +1,26 @@
 import type { Response } from "express";
 import { Router } from "express";
-import { runAgent } from "../agent/loop";
+import { runAgent } from "../agent/agent";
 import type { SSEEvent } from "../agent/types";
 import {
   findAgentRunById,
   listAgentRunsByUser,
   parseResult,
   parseSteps,
-} from "../repositories/agent.repo";
-import { authMiddleware, type AuthRequest } from "../middleware/auth";
-import { RunAgentBody } from "../validators/agent.validator";
+} from "../store/agent.store";
+import { authMiddleware, type AuthRequest } from "../middleware/auth.middleware";
+import { RunAgentBodySchema } from "../agent/schema";
 
 export const agentRouter = Router();
 
 agentRouter.use(authMiddleware);
 
-export const agentStart = async ( req: Request, res: Response ) => {
-    try {
-    const parsed = RunAgentBody.safeParse(req.body);
-    if (!parsed.success) {
-        res.status(400).json({ error: parsed.error.flatten() });
-        return;
-    }
+export const agentStart = async (req: AuthRequest, res: Response) => {
+  const parsed = RunAgentBodySchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.flatten() });
+    return;
+  }
 
   const { task, maxSteps } = parsed.data;
   const userId = req.user!.userId;
@@ -35,11 +34,11 @@ export const agentStart = async ( req: Request, res: Response ) => {
     res.write(`data: ${JSON.stringify(event)}\n\n`);
   };
 
-  // Interval to prevent proxy timeouts
   const keepAlive = setInterval(() => {
     res.write(": keep-alive\n\n");
   }, 20_000);
 
+  try {
     for await (const event of runAgent(task, userId, maxSteps)) {
       emit(event);
       if (event.type === "result" || event.type === "error") break;
@@ -54,7 +53,7 @@ export const agentStart = async ( req: Request, res: Response ) => {
 };
 
 // List past runs for the authenticated user
-export const getAllAgentsRun = async ( req: Request, res: Response ) => {
+export const getAllAgentsRun = async (req: AuthRequest, res: Response) => {
   try {
     const runs = await listAgentRunsByUser(req.user!.userId);
     res.json({
@@ -82,18 +81,29 @@ export const getAllAgentsRun = async ( req: Request, res: Response ) => {
   }
 };
 
-export const runAgentById = async ( req: Request, res: Response ) => {
-
+export const runAgentById = async (req: AuthRequest, res: Response) => {
   const runId = String(req.params["id"] ?? "");
+  const userId = req.user!.userId;
+
   const run = await findAgentRunById(runId);
   if (!run) {
-    res.status(404).json({ 
-        success: false,
-        message: null,
-        error: "AGENT_ID_NOT_FOUND" 
-    })
+    res.status(404).json({
+      success: false,
+      message: null,
+      error: "AGENT_ID_NOT_FOUND",
+    });
     return;
   }
+
+  if (run.userId !== userId) {
+    res.status(403).json({
+      success: false,
+      message: null,
+      error: "FORBIDDEN",
+    });
+    return;
+  }
+
   res.json({
     run: {
       id: run.id,

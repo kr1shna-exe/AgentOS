@@ -5,7 +5,8 @@ import { env } from "../config/env";
 import { db } from "@repo/database";
 import { signToken } from "../middleware/auth.middleware";
 
-const FRONTEND_URL = env.NEXT_PUBLIC_APP_URL
+const FRONTEND_URL =
+  env.NEXT_PUBLIC_APP_URL ?? env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
 
 export const googleAuth = async (req: Request, res: Response) => {
   try {
@@ -60,9 +61,18 @@ export const googleCallback = async (req: Request, res: Response )  => {
     return;
     }
 
-    const user = await db.user.create({
-      data: {
+    const user = await db.user.upsert({
+      where: { email: userInfo.email },
+      create: {
         email: userInfo.email,
+        name: userInfo.name ?? undefined,
+        googleAccessToken: tokens.access_token!,
+        googleRefreshToken: tokens.refresh_token ?? undefined,
+        tokenExpiry: tokens.expiry_date
+          ? new Date(tokens.expiry_date)
+          : undefined,
+      },
+      update: {
         name: userInfo.name ?? undefined,
         googleAccessToken: tokens.access_token!,
         googleRefreshToken: tokens.refresh_token ?? undefined,

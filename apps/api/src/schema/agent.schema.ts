@@ -1,9 +1,9 @@
-import z from "zod";
+import { z } from "zod";
 
 export const agentSchema = z.object({
-    task: z.string(),
-    status: z.string()String   @default("running") // running | completed | failed
-    plan     String?
-    steps    Json?    // agent reasoning logs
-    result   Json?    // final structured output
-})
+  task: z.string(),
+  status: z.enum(["pending", "planning", "executing", "completed", "failed"]).optional(),
+  plan: z.string().optional(),
+  steps: z.array(z.unknown()).optional(),
+  result: z.unknown().optional(),
+});
