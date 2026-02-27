@@ -3,8 +3,6 @@ import type { Tool } from "./types";
 
 const MODEL = "gemini-2.5-flash";
 
-// Call Gemini to generate a high-level plan before execution begins
-// The plan is shown in the UI and included in the executor's system prompt
 export async function generatePlan( task: string, tools: Tool[] ): Promise<string> {
   const toolList = tools.map((t) => `- ${t.name}: ${t.description}`).join("\n");
 

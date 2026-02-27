@@ -1,12 +1,7 @@
 import type { Response } from "express";
 import { runAgent } from "../agent/agent";
 import type { SSEEvent } from "../agent/types";
-import {
-  findAgentRunById,
-  listAgentRunsByUser,
-  parseResult,
-  parseSteps,
-} from "../store/agent.store";
+import { findAgentRunById, listAgentRunsByUser, parseResult, parseSteps } from "../store/agent.store";
 import { authMiddleware, type AuthRequest } from "../middleware/auth.middleware";
 import { RunAgentBodySchema } from "../agent/schema";
 

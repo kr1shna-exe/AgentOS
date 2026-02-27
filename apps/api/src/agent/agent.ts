@@ -6,9 +6,9 @@ import { generatePlan } from "./planner";
 import type { AgentContext, AgentResult, Citation, SSEEvent, Step } from "./types";
 import buildSystemPrompt from "../prompt/prompt";
   
-  const MODEL = "gemini-2.5-flash";
+const MODEL = "gemini-2.5-flash";
   
-  const FINISH_DECLARATION: FunctionDeclaration = {
+const FINISH_DECLARATION: FunctionDeclaration = {
     name: "finish",
     description:
       "Call this when you have gathered sufficient information to answer the task completely. Do not call other tools after this.",
@@ -30,8 +30,10 @@ import buildSystemPrompt from "../prompt/prompt";
   
   
 export async function* runAgent( task: string, userId: string, maxSteps = 10 ): AsyncGenerator<SSEEvent> {
+
     const run = await createAgentRun(userId, task, maxSteps);
     const runId = run.id;
+
     const context: AgentContext = { runId, userId, task };
   
     try {
@@ -51,7 +53,9 @@ export async function* runAgent( task: string, userId: string, maxSteps = 10 ): 
       const conversation: Content[] = [
         { 
             role: "user", 
-            parts: [{ text: `Task: ${task}` }] 
+            parts: [{ 
+                text: `Task: ${task}` 
+            }] 
         },
       ];
   
@@ -123,7 +127,7 @@ export async function* runAgent( task: string, userId: string, maxSteps = 10 ): 
             toolResult = {
               success: false,
               data: null,
-              error: err instanceof Error ? err.message : "Tool execution failed",
+              error: "TOOL_EXECUTION_FAILED",
             };
           }
         }
@@ -169,8 +173,10 @@ export async function* runAgent( task: string, userId: string, maxSteps = 10 ): 
       };
       await updateAgentRun(runId, { status: "completed", steps, result });
       yield { type: "result", data: { runId, result } };
+      
     } catch (err) {
       const error = err instanceof Error ? err.message : "Agent failed";
+
       await updateAgentRun(runId, { status: "failed" });
       yield { type: "error", data: { runId, error } };
     }

@@ -22,7 +22,7 @@ export const googleAuth = async (req: Request, res: Response) => {
 
     res.status(500).json({
         success: false,
-        message: null,
+        data: null,
         error: "FAILED_TO_AUTHENTICATE_USER", 
     })
     return;
@@ -36,7 +36,7 @@ export const googleCallback = async (req: Request, res: Response )  => {
         if (!code) {
             res.status(400).json({
                 success: false,
-                message: null,
+                data: null,
                 error: "AUTHORIZATION_CODE_MISSING",
             })
             return;
@@ -55,8 +55,8 @@ export const googleCallback = async (req: Request, res: Response )  => {
     if (!userInfo.email) {
       res.status(400).json({ 
         success: false,
-        message: null,
-        error: "Unable to retrieve user email from Google" 
+        data: null,
+        error: "UNABLE_RETRIEVE_EMAIL_FROM_GOOGLE" 
     })
     return;
     }
@@ -93,7 +93,7 @@ export const googleCallback = async (req: Request, res: Response )  => {
 
     res.status(500).json({
         success: false,
-        message: null,
+        data: null,
         error: "INTERNAL_SERVER_ERROR" 
     })
     return;

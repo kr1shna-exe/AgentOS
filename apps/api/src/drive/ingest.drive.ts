@@ -3,11 +3,7 @@ import { createDriveClient, listSyncableFiles } from "./index";
 import { extractContent } from "./extract.drive";
 import { findDriveFile, upsertDriveFile } from "../store/drive.store";
 import { chunkText, embedChunks } from "../utils/embedding";
-import {
-  ensureVectorCollection,
-  deleteFileChunks,
-  upsertFileChunks,
-} from "../store/vector.store";
+import { ensureVectorCollection, deleteFileChunks, upsertFileChunks } from "../store/vector.store";
 
 export type SyncMode = "full" | "incremental";
 
@@ -35,10 +31,8 @@ function sha256Hex(input: string): string {
   return createHash("sha256").update(input, "utf8").digest("hex");
 }
 
-export async function* syncDrive(
-  userId: string,
-  mode: SyncMode,
-): AsyncGenerator<SyncEvent> {
+export async function* syncDrive( userId: string, mode: SyncMode ) {
+
   try {
     await ensureVectorCollection();
     const drive = await createDriveClient(userId);
@@ -149,6 +143,7 @@ export async function* syncDrive(
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("[ingest] Drive sync failed:", err);
+    
     yield { type: "error", error: message };
   }
 }

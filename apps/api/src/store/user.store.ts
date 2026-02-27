@@ -10,7 +10,7 @@ export interface UpsertUserParams {
   tokenExpiry?: Date;
 }
 
-export async function upsertUser(params: UpsertUserParams): Promise<User> {
+export async function upsertUser(params: UpsertUserParams) {
   const { email, name, accessToken, refreshToken, tokenExpiry } = params;
 
   return db.user.upsert({
@@ -31,16 +31,15 @@ export async function upsertUser(params: UpsertUserParams): Promise<User> {
   });
 }
 
-export async function findUserById(id: string): Promise<User | null> {
-  return db.user.findUnique({ where: { id } });
+export async function findUserById(id: string) {
+  return db.user.findUnique({ 
+    where: { 
+        id 
+    } 
+});
 }
 
-export async function updateTokens(
-  userId: string,
-  accessToken: string,
-  refreshToken?: string | null,
-  tokenExpiry?: number | null,
-): Promise<void> {
+export async function updateTokens( userId: string, accessToken: string, refreshToken?: string | null, tokenExpiry?: number | null ) {
   const data: Record<string, unknown> = {
     googleAccessToken: accessToken,
   };
@@ -52,7 +51,9 @@ export async function updateTokens(
   }
 
   await db.user.update({
-    where: { id: userId },
+    where: { 
+        id: userId 
+    },
     data,
   });
 }

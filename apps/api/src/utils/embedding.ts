@@ -63,6 +63,7 @@ export function chunkText(text: string): Chunk[] {
     }
 
     const candidate = current ? current + "\n\n" + paragraph : paragraph;
+
     if (estimateTokens(candidate) <= TARGET_TOKENS) {
       current = candidate;
     } else {
@@ -79,8 +80,6 @@ export function chunkText(text: string): Chunk[] {
   flush();
   return chunks;
 }
-
-// ─── Embedder ──────────────────────────────────────────────────────────────
 
 const EMBED_MODEL = "text-embedding-004";
 const BATCH_SIZE = 5;

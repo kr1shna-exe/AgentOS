@@ -34,19 +34,22 @@ export const webSearchTool: Tool = {
     },
   },
 
-  async execute(
-    args: Record<string, unknown>,
-    _context: AgentContext,
-  ): Promise<ToolResult> {
+async execute( args: Record<string, unknown>, _context: AgentContext ) {
+
     const query = String(args["query"] ?? "").trim();
     const rawNum = Number(args["numResults"] ?? DEFAULT_NUM_RESULTS);
+
     const numResults = Math.min(
       Number.isNaN(rawNum) ? DEFAULT_NUM_RESULTS : rawNum,
       MAX_NUM_RESULTS,
     );
 
     if (!query) {
-      return { success: false, data: null, error: "query is required" };
+      return { 
+        success: false, 
+        data: null, 
+        error: "QUERY_REQUIRED" 
+    };
     }
 
     const apiKey = process.env.SERPER_API_KEY ?? process.env.SERPER_API;
@@ -59,6 +62,7 @@ export const webSearchTool: Tool = {
     }
 
     let response: Response;
+
     try {
       response = await fetch(SERPER_URL, {
         method: "POST",
@@ -68,11 +72,12 @@ export const webSearchTool: Tool = {
         },
         body: JSON.stringify({ q: query, num: numResults }),
       });
+
     } catch (err) {
       return {
         success: false,
         data: null,
-        error: err instanceof Error ? err.message : "Serper request failed",
+        error: "SERPER_REQUEST_FAILED",
       };
     }
 
@@ -92,7 +97,7 @@ export const webSearchTool: Tool = {
       return {
         success: false,
         data: null,
-        error: "Invalid JSON response from Serper",
+        error: "INVALID_JSON_RESPONSE",
       };
     }
 

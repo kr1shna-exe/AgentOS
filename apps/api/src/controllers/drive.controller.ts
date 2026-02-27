@@ -32,11 +32,22 @@ export const syncDrive = async (req: AuthRequest, res: Response) => {
 // List all synced Drive files for the authenticated user.
 export const syncedDriveFiles = async (req: AuthRequest, res: Response) => {
   try {
+
     const files = await listDriveFiles(req.user!.userId);
-    res.status(200).json({ 
-        files });
+
+    return res.status(200).json({
+      success: true,
+      data: files,
+      error: null,
+      });
+      
   } catch (err) {
     console.error("Failed to list drive files:", err);
-    res.status(500).json({ error: "Failed to retrieve drive files" });
+
+    res.status(500).json({
+      success: false,
+      message: null,
+      error: "INTERNAL_SERVER_ERROR" 
+    });
   }
 };

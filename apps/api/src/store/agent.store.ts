@@ -1,11 +1,7 @@
 import type { AgentResult, AgentRunStatus, Step } from "../agent/types";
 import { db, type AgentRun } from "@repo/database";
 
-export async function createAgentRun(
-  userId: string,
-  task: string,
-  maxSteps: number,
-): Promise<AgentRun> {
+export async function createAgentRun( userId: string, task: string, maxSteps: number ) {
   return db.agentRun.create({
     data: {
       userId,
@@ -23,10 +19,8 @@ type AgentRunUpdatePayload = Partial<{
   result: AgentResult;
 }>;
 
-export async function updateAgentRun(
-  runId: string,
-  payload: AgentRunUpdatePayload,
-): Promise<void> {
+export async function updateAgentRun( runId: string, payload: AgentRunUpdatePayload ) {
+
   const data: Record<string, unknown> = {};
   if (payload.status !== undefined) data.status = payload.status;
   if (payload.plan !== undefined) data.plan = payload.plan;
@@ -36,22 +30,29 @@ export async function updateAgentRun(
   if (Object.keys(data).length === 0) return;
 
   await db.agentRun.update({
-    where: { id: runId },
+    where: { 
+        id: runId 
+    },
     data,
   });
 }
 
-export async function findAgentRunById(runId: string): Promise<AgentRun | null> {
-  return db.agentRun.findUnique({ where: { id: runId } });
+export async function findAgentRunById(runId: string) {
+  return db.agentRun.findUnique({ 
+    where: { 
+        id: runId 
+    } 
+    });
 }
 
-export async function listAgentRunsByUser(
-  userId: string,
-  limit = 20,
-): Promise<AgentRun[]> {
+export async function listAgentRunsByUser( userId: string, limit = 20 ) {
   return db.agentRun.findMany({
-    where: { userId },
-    orderBy: { createdAt: "desc" },
+    where: { 
+        userId 
+    },
+    orderBy: { 
+        createdAt: "desc" 
+    },
     take: limit,
   });
 }

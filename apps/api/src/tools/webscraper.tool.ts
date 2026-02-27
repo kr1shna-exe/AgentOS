@@ -41,13 +41,15 @@ export const webScrapeTool: Tool = {
     },
   },
 
-  async execute(
-    args: Record<string, unknown>,
-    _context: AgentContext,
-  ): Promise<ToolResult> {
+  async execute( args: Record<string, unknown>, _context: AgentContext ) {
+
     const url = String(args["url"] ?? "").trim();
     if (!url) {
-      return { success: false, data: null, error: "url is required" };
+      return { 
+        success: false, 
+        data: null, 
+        error: "URL_REQUIRED" 
+    };
     }
 
     let html: string;
@@ -69,11 +71,12 @@ export const webScrapeTool: Tool = {
       }
 
       html = await response.text();
+
     } catch (err) {
       return {
         success: false,
         data: null,
-        error: err instanceof Error ? err.message : "Fetch failed",
+        error: "FETCH_FAILED",
       };
     }
 

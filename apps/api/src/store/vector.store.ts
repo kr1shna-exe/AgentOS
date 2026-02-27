@@ -20,6 +20,7 @@ export interface VectorSearchResult {
 }
 
 export async function ensureVectorCollection(): Promise<void> {
+
   const { collections } = await qdrant.getCollections();
   const exists = collections.some((c) => c.name === COLLECTION);
 
@@ -38,7 +39,9 @@ export async function ensureVectorCollection(): Promise<void> {
     }
   } else {
     await qdrant.createCollection(COLLECTION, {
-      vectors: { size: VECTOR_SIZE, distance: "Cosine" },
+      vectors: { 
+        size: VECTOR_SIZE, distance: "Cosine" 
+      },
     });
   }
 
@@ -63,13 +66,7 @@ export async function ensureVectorCollection(): Promise<void> {
   }
 }
 
-export async function upsertFileChunks(
-  userId: string,
-  fileId: string,
-  fileName: string,
-  chunks: string[],
-  embeddings: number[][],
-): Promise<void> {
+export async function upsertFileChunks( userId: string, fileId: string, fileName: string, chunks: string[], embeddings: number[][] ) {
   const points = chunks.map((content, i) => ({
     id: randomUUID(),
     vector: embeddings[i]!,
@@ -85,10 +82,7 @@ export async function upsertFileChunks(
   await qdrant.upsert(COLLECTION, { points });
 }
 
-export async function deleteFileChunks(
-  userId: string,
-  fileId: string,
-): Promise<void> {
+export async function deleteFileChunks( userId: string, fileId: string ) {
   try {
     await qdrant.delete(COLLECTION, {
       filter: {
@@ -103,22 +97,24 @@ export async function deleteFileChunks(
   }
 }
 
-export async function searchSimilar(
-  userId: string,
-  queryVector: number[],
-  topK = 5,
-): Promise<VectorSearchResult[]> {
+export async function searchSimilar( userId: string, queryVector: number[], topK = 5 ) {
   const results = await qdrant.search(COLLECTION, {
     vector: queryVector,
     limit: topK,
     filter: {
-      must: [{ key: "userId", match: { value: userId } }],
+      must: [{ 
+        key: "userId", 
+        match: { 
+          value: userId 
+        } 
+      }],
     },
     with_payload: true,
   });
 
   return results.map((r) => {
     const payload = r.payload as unknown as ChunkPayload;
+
     return {
       content: payload.content,
       fileName: payload.fileName,
@@ -127,9 +123,8 @@ export async function searchSimilar(
   });
 }
 
-export function resultsToCitations(
-  results: VectorSearchResult[],
-): Citation[] {
+export function resultsToCitations( results: VectorSearchResult[] ) {
+  
   return results.map((r) => ({
     title: r.fileName,
     fileName: r.fileName,

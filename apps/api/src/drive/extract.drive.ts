@@ -14,10 +14,8 @@ async function parsePdf(buffer: Buffer): Promise<string> {
   return typeof result === "string" ? result : (result?.text ?? "") || "";
 }
 
-export async function extractContent(
-  drive: drive_v3.Drive,
-  file: DriveFile,
-): Promise<string | null> {
+export async function extractContent( drive: drive_v3.Drive, file: DriveFile ) {
+
   const { id, mimeType, name } = file;
   if (!id || !mimeType) return null;
 
@@ -41,6 +39,7 @@ export async function extractContent(
     return null;
   } catch (err) {
     console.error(`[extract] Failed to extract "${name}" (${id}):`, err);
+    
     return null;
   }
 }

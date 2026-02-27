@@ -16,7 +16,11 @@ export const authMiddleware = async ( req: AuthRequest, res: Response, next: Nex
   const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
 
   if (!token) {
-    res.status(401).json({ error: "Authorization token required" });
+    res.status(401).json({
+      success: false,
+      data: null,
+      error: "TOKEN_REQUIRED" 
+    })
     return;
   }
 
@@ -27,6 +31,7 @@ export const authMiddleware = async ( req: AuthRequest, res: Response, next: Nex
     };
     req.user = payload;
     next();
+    
   } catch {
     res.status(401).json({ 
         success: false,

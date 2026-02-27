@@ -1,13 +1,5 @@
 import type { AgentContext, Citation, Tool, ToolResult } from "../agent/types";
 
-// Expected interface for your embeddings module (you must implement these)
-// Place in: src/embeddings/embedder.ts
-//   export async function embedText(text: string): Promise<number[]>
-//
-// Place in: src/embeddings/store.ts
-//   export async function searchSimilar(userId: string, queryVector: number[], topK: number): Promise<Array<{ content: string; fileName: string; score: number }>>
-//   export function resultsToCitations(results: Array<{ content: string; fileName: string }>): Citation[]
-
 interface VectorSearchResult {
   content: string;
   fileName: string;
@@ -34,10 +26,8 @@ export const vectorSearchTool: Tool = {
     },
   },
 
-  async execute(
-    args: Record<string, unknown>,
-    context: AgentContext,
-  ): Promise<ToolResult> {
+  async execute( args: Record<string, unknown>, context: AgentContext ) {
+
     const query = String(args["query"] ?? "").trim();
     const rawTopK = Number(args["topK"] ?? DEFAULT_TOP_K);
     const topK = Math.min(
@@ -46,7 +36,11 @@ export const vectorSearchTool: Tool = {
     );
 
     if (!query) {
-      return { success: false, data: null, error: "query is required" };
+      return { 
+        success: false, 
+        data: null, 
+        error: "QUERY_REQUIRED" 
+    };
     }
 
     try {
@@ -86,11 +80,12 @@ export const vectorSearchTool: Tool = {
         },
         citations: resultsToCitations(results),
       };
+
     } catch (err) {
-      return {
+    return {
         success: false,
         data: null,
-        error: err instanceof Error ? err.message : "Vector search failed",
+        error: "VECTOR_SEARCH_FAILED",
       };
     }
   },

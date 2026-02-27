@@ -13,10 +13,10 @@ const INDEXABLE_MIME_TYPES: readonly string[] = [
   "text/x-markdown",
 ];
 
-export async function createDriveClient(
-  userId: string,
-): Promise<drive_v3.Drive> {
+export async function createDriveClient( userId: string ) {
+
   const user = await findUserById(userId);
+
   if (!user) {
     throw new Error(`User ${userId} not found`);
   }
@@ -46,9 +46,7 @@ export async function createDriveClient(
 }
 
 /** Lists Drive files that can be indexed (Docs, PDFs, plain text). */
-export async function listSyncableFiles(
-  drive: drive_v3.Drive,
-): Promise<DriveFile[]> {
+export async function listSyncableFiles( drive: drive_v3.Drive ) {
   const mimeConditions = INDEXABLE_MIME_TYPES.map((m) => `mimeType='${m}'`).join(
     " or ",
   );
@@ -74,10 +72,7 @@ export async function listSyncableFiles(
 }
 
 /** Export a Google Doc as plain text. */
-export async function exportDocAsText(
-  drive: drive_v3.Drive,
-  fileId: string,
-): Promise<string> {
+export async function exportDocAsText( drive: drive_v3.Drive, fileId: string ) {
   const res = await drive.files.export(
     { fileId, mimeType: "text/plain" },
     { responseType: "text" },
@@ -86,13 +81,12 @@ export async function exportDocAsText(
 }
 
 /** Download a file’s raw bytes. */
-export async function downloadFileAsBuffer(
-  drive: drive_v3.Drive,
-  fileId: string,
-): Promise<Buffer> {
+export async function downloadFileAsBuffer( drive: drive_v3.Drive, fileId: string ) {
   const res = await drive.files.get(
     { fileId, alt: "media" },
     { responseType: "arraybuffer" },
   );
-  return Buffer.from(res.data as ArrayBuffer);
+  return Buffer.from(
+    res.data as ArrayBuffer
+);
 }

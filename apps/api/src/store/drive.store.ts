@@ -10,9 +10,7 @@ export interface UpsertDriveFileParams {
   lastSyncedAt?: Date;
 }
 
-export async function upsertDriveFile(
-  params: UpsertDriveFileParams,
-): Promise<DriveFile> {
+export async function upsertDriveFile( params: UpsertDriveFileParams ) {
   const {
     userId,
     driveFileId,
@@ -47,27 +45,34 @@ export async function upsertDriveFile(
   });
 }
 
-export async function findDriveFile(
-  userId: string,
-  driveFileId: string,
-): Promise<DriveFile | null> {
+export async function findDriveFile( userId: string, driveFileId: string ) {
   return db.driveFile.findUnique({
-    where: { userId_driveFileId: { userId, driveFileId } },
+    where: { 
+        userId_driveFileId: { 
+            userId, driveFileId 
+        } 
+    },
   });
 }
 
-export async function listDriveFiles(userId: string): Promise<DriveFile[]> {
+export async function listDriveFiles(userId: string) {
   return db.driveFile.findMany({
-    where: { userId },
-    orderBy: { name: "asc" },
+    where: { 
+        userId 
+    },
+    orderBy: { 
+        name: "asc" 
+    },
   });
 }
 
-export async function deleteDriveFile(
-  userId: string,
-  driveFileId: string,
-): Promise<void> {
+export async function deleteDriveFile( userId: string, driveFileId: string ) {
   await db.driveFile.delete({
-    where: { userId_driveFileId: { userId, driveFileId } },
+    where: { 
+        userId_driveFileId: { 
+            userId, 
+            driveFileId 
+        } 
+    },
   });
 }

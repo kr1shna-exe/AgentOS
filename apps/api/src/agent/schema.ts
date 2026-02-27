@@ -6,8 +6,6 @@ export const RunAgentBodySchema = z.object({
   maxSteps: z.number().int().min(1).max(50).optional().default(10),
 });
 
-export type RunAgentBody = z.infer<typeof RunAgentBodySchema>;
-
 export const AgentRunSummarySchema = z.object({
   id: z.string().uuid(),
   task: z.string(),
@@ -24,4 +22,5 @@ export const RunByIdParamsSchema = z.object({
   id: z.string().uuid(),
 });
 
+export type RunAgentBody = z.infer<typeof RunAgentBodySchema>;
 export type RunByIdParams = z.infer<typeof RunByIdParamsSchema>;
