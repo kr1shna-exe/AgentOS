@@ -1,15 +1,28 @@
-import { Button } from "@workspace/ui/components/button"
+"use client"
+
+import * as React from "react"
+import { useRouter } from "next/navigation"
+import { Sidebar } from "@/components/sidebar/sidebarMain"
+import { Dashboard } from "@/components/dashboard"
 
 export default function Page() {
+  const router = useRouter()
+
+  const handleLoginClick = () => {
+    router.push("/login")
+  }
+
+  const handleNewChat = () => {
+    const newChatId = Date.now().toString()
+    router.push(`/chat/${newChatId}`)
+  }
+
   return (
-    <div className="flex items-center justify-center min-h-svh">
-      <div className="flex flex-col items-center justify-center gap-4">
-        <h1 className="text-2xl font-bold">Hello World</h1>
-        <div className="flex gap-2">
-          <Button>Button</Button>
-          <Button variant="outline">Outline</Button>
-        </div>
-      </div>
+    <div className="flex h-screen bg-[#FAFAFA] dark:bg-black">
+      <Sidebar onLoginClick={handleLoginClick} onNewChat={handleNewChat} />
+      <main className="flex-1 lg:ml-64">
+        <Dashboard />
+      </main>
     </div>
   )
 }
