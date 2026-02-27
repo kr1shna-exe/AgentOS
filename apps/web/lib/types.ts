@@ -1,6 +1,4 @@
-/**
- * Types mirroring backend API responses.
- */
+// Types mirroring backend API responses.
 
 export interface Citation {
   title: string;

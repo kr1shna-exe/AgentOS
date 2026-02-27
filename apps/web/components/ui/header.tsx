@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Clock, Settings } from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
-import { ThemeToggle } from "./theme-toggle"
+import { ThemeToggle } from "./themeToggle"
 import { cn } from "@workspace/ui/lib/utils"
 
 interface HeaderProps {

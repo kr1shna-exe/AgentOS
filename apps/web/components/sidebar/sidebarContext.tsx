@@ -1,11 +1,7 @@
 "use client"
 
 import * as React from "react"
-
-interface SidebarContextValue {
-  isOpen: boolean
-  toggle: () => void
-}
+import { SidebarContextValue } from "@/types/utils.type"
 
 const SidebarContext = React.createContext<SidebarContextValue | null>(null)
 

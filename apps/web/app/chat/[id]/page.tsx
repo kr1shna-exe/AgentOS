@@ -1,25 +1,36 @@
 "use client"
 
 import * as React from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter, useParams, useSearchParams } from "next/navigation"
 import { SidebarProvider, useSidebar } from "@/components/sidebar/sidebarContext"
 import { Sidebar } from "@/components/sidebar/sidebarMain"
 import { ChatContainer } from "@/components/chat/chatContainer"
-import { useChat } from "@/hooks/useChat"
+import { useAgentRun } from "@/hooks/useAgentRun"
 
 function ChatPageContent() {
   const router = useRouter()
+  const params = useParams<{ id: string }>()
   const searchParams = useSearchParams()
   const { isOpen } = useSidebar()
+  const runId = params?.id ?? null
   const initialQuestion = searchParams.get("q")
 
-  const { messages, isLoading, sendMessage } = useChat()
+  const { task, status, steps, result, error, startRun, loadRun } = useAgentRun()
 
   React.useEffect(() => {
-    if (initialQuestion && messages.length === 0) {
-      sendMessage(initialQuestion)
+    if (initialQuestion && !task) {
+      startRun(initialQuestion)
+    } else if (!initialQuestion && runId && !task) {
+      loadRun(runId)
     }
-  }, [initialQuestion, messages.length, sendMessage])
+  }, [initialQuestion, runId, task, startRun, loadRun])
+
+  const handleSendMessage = React.useCallback(
+    (message: string) => {
+      startRun(message)
+    },
+    [startRun]
+  )
 
   const handleLoginClick = () => router.push("/login")
   const handleNewChat = () => router.push(`/chat/${Date.now()}`)
@@ -29,9 +40,12 @@ function ChatPageContent() {
       <Sidebar onLoginClick={handleLoginClick} onNewChat={handleNewChat} />
       <main className={isOpen ? "flex-1 lg:ml-64" : "flex-1 ml-0"}>
         <ChatContainer
-          messages={messages}
-          onSendMessage={sendMessage}
-          isLoading={isLoading}
+          task={task}
+          status={status}
+          steps={steps}
+          result={result}
+          error={error}
+          onSendMessage={handleSendMessage}
           sidebarOpen={isOpen}
         />
       </main>

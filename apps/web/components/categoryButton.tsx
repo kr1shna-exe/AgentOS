@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Sparkles, Compass, Code, GraduationCap } from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
+import { CategoryButtonsProps } from "@/types/utils.type"
 
 const categories = [
   {
@@ -26,10 +27,6 @@ const categories = [
     icon: GraduationCap,
   },
 ]
-
-interface CategoryButtonsProps {
-  onCategoryClick?: (categoryId: string) => void
-}
 
 export function CategoryButtons({ onCategoryClick }: CategoryButtonsProps) {
   return (

@@ -81,7 +81,9 @@ export function chunkText(text: string): Chunk[] {
   return chunks;
 }
 
-const EMBED_MODEL = "text-embedding-004";
+// Use gemini-embedding-001 (Gemini API, GA July 2025)
+// Alternatives: text-embedding-005, text-multilingual-embedding-002
+const EMBED_MODEL = process.env.EMBED_MODEL ?? "gemini-embedding-001";
 const BATCH_SIZE = 5;
 
 const apiKey = process.env.GEMINI_API_KEY ?? process.env.GOOGLE_GEMINI_API;

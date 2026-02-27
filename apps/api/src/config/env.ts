@@ -13,7 +13,7 @@ const EnvSchema = z.object({
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_SECRET_ID: z.string().min(1),
   GOOGLE_CALLBACK_API: z.string().min(1),
-  QDRANT_API_URL: z.string().min(1),
+  QDRANT_API_URL: z.string().optional(),
   QDRANT_CLUSTER_ID: z.string().optional(),
   GOOGLE_GEMINI_API: z.string().optional(),
   SERPER_API: z.string(),

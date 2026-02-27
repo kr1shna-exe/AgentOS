@@ -35,9 +35,7 @@ export async function apiGet<T>(path: string, signal?: AbortSignal): Promise<T> 
   return res.json() as Promise<T>;
 }
 
-/**
- * POST request with JSON body. Returns raw Response for streaming.
- */
+
 export async function streamPost(
   path: string,
   body: object,

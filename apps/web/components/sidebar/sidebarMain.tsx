@@ -9,11 +9,7 @@ import { DriveFiles } from "./driveFiles"
 import { useSidebar } from "./sidebarContext"
 import { isAuthenticated, clearToken } from "@/lib/auth"
 import { cn } from "@workspace/ui/lib/utils"
-
-interface SidebarProps {
-  onLoginClick: () => void
-  onNewChat?: () => void
-}
+import { SidebarProps } from "@/types/utils.type"
 
 export function Sidebar({ onLoginClick, onNewChat }: SidebarProps) {
   const { isOpen, toggle } = useSidebar()
@@ -103,8 +99,11 @@ export function Sidebar({ onLoginClick, onNewChat }: SidebarProps) {
         {/* Drive Files */}
         <DriveFiles />
 
-        {/* Chat History */}
-        <div className="flex-1 overflow-y-auto min-h-0">
+        {/* Chat History - real runs from useAgentRuns */}
+        <div className="flex-1 overflow-y-auto min-h-0 border-t border-gray-200 dark:border-gray-800">
+          <h3 className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400 px-4 pt-3 mb-2">
+            CHAT HISTORY
+          </h3>
           <ChatHistory />
         </div>
 

@@ -4,7 +4,7 @@ import * as React from "react"
 import { useRouter } from "next/navigation"
 import { cn } from "@workspace/ui/lib/utils"
 import { ChatInput } from "./chatInput"
-import { Header } from "./header"
+import { Header } from "./ui/header"
 import { useSidebar } from "./sidebar/sidebarContext"
 
 export function Dashboard() {
@@ -27,7 +27,7 @@ export function Dashboard() {
           isOpen ? "left-64" : "left-0"
         )}
       >
-        <ChatInput onSend={handleSendMessage} />
+        <ChatInput onSend={handleSendMessage} maxWidthClass="max-w-2xl" />
       </div>
     </div>
   )
