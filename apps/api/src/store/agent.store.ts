@@ -7,7 +7,12 @@ export async function createAgentRun(
   maxSteps: number,
 ): Promise<AgentRun> {
   return db.agentRun.create({
-    data: { userId, task, maxSteps, status: "pending" },
+    data: {
+      userId,
+      task,
+      maxSteps,
+      status: "pending",
+    } as Parameters<typeof db.agentRun.create>[0]["data"],
   });
 }
 

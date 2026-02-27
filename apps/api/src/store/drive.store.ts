@@ -23,6 +23,9 @@ export async function upsertDriveFile(
     lastSyncedAt = new Date(),
   } = params;
 
+  type CreateInput = Parameters<typeof db.driveFile.upsert>[0]["create"];
+  type UpdateInput = Parameters<typeof db.driveFile.upsert>[0]["update"];
+
   return db.driveFile.upsert({
     where: { userId_driveFileId: { userId, driveFileId } },
     create: {
@@ -33,14 +36,14 @@ export async function upsertDriveFile(
       contentHash,
       modifiedTime,
       lastSyncedAt,
-    },
+    } as CreateInput,
     update: {
       name,
       mimeType,
       contentHash,
       modifiedTime,
       lastSyncedAt,
-    },
+    } as UpdateInput,
   });
 }
 

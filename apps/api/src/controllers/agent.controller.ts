@@ -1,5 +1,4 @@
 import type { Response } from "express";
-import { Router } from "express";
 import { runAgent } from "../agent/agent";
 import type { SSEEvent } from "../agent/types";
 import {
@@ -10,10 +9,6 @@ import {
 } from "../store/agent.store";
 import { authMiddleware, type AuthRequest } from "../middleware/auth.middleware";
 import { RunAgentBodySchema } from "../agent/schema";
-
-export const agentRouter = Router();
-
-agentRouter.use(authMiddleware);
 
 export const agentStart = async (req: AuthRequest, res: Response) => {
   const parsed = RunAgentBodySchema.safeParse(req.body);
@@ -64,9 +59,9 @@ export const getAllAgentsRun = async (req: AuthRequest, res: Response) => {
         plan: r.plan,
         steps: parseSteps(r),
         result: parseResult(r),
-        maxSteps: r.maxSteps,
+        maxSteps: (r as { maxSteps?: number }).maxSteps ?? 10,
         createdAt: r.createdAt,
-        updatedAt: r.updatedAt,
+        updatedAt: (r as { updatedAt?: Date }).updatedAt ?? r.createdAt,
       })),
     });
   } catch (err) {
@@ -112,9 +107,9 @@ export const runAgentById = async (req: AuthRequest, res: Response) => {
       plan: run.plan,
       steps: parseSteps(run),
       result: parseResult(run),
-      maxSteps: run.maxSteps,
+      maxSteps: (run as { maxSteps?: number }).maxSteps ?? 10,
       createdAt: run.createdAt,
-      updatedAt: run.updatedAt,
+      updatedAt: (run as { updatedAt?: Date }).updatedAt ?? run.createdAt,
     },
   });
 };
