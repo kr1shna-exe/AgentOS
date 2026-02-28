@@ -13,7 +13,6 @@ export const syncDrive = async (req: AuthRequest, res: Response) => {
   res.setHeader("Connection", "keep-alive");
   res.flushHeaders();
 
-  // Keepalive ping every 20s to prevent proxy idle-timeout from killing the stream
   const keepalive = setInterval(() => {
     res.write(": ping\n\n");
   }, 20_000);
@@ -29,6 +28,12 @@ export const syncDrive = async (req: AuthRequest, res: Response) => {
   } catch (err) {
     const error = err instanceof Error ? err.message : "Sync failed";
     emit({ type: "error", error });
+
+    return res.status(500).json({
+      success: false,
+      data: null,
+      error: "INTERNAL_SERVER_ERROR"
+    });
   } finally {
     clearInterval(keepalive);
     res.end();
@@ -55,5 +60,6 @@ export const syncedDriveFiles = async (req: AuthRequest, res: Response) => {
       message: null,
       error: "INTERNAL_SERVER_ERROR" 
     });
+    return;
   }
 };

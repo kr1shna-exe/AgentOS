@@ -5,7 +5,7 @@ import { CheckCircle2, ChevronDown, ChevronRight, Globe, HardDrive, Loader2, Sea
 import { cn } from "@workspace/ui/lib/utils"
 import type { Step } from "@/lib/types"
 
-const TOOL_META: Record<string,{ label: string; colorClass: string; Icon: React.ElementType }> = {
+const TOOL_META: Record<string, { label: string; colorClass: string; Icon: React.ElementType }> = {
   web_search: {
     label: "Web Search",
     colorClass: "bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-300/40",
@@ -80,7 +80,7 @@ export function StepCard({ step, isLast }: StepCardProps) {
         )}
       </div>
 
-      <div className="mb-4 flex-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-[#FAFAFA] dark:bg-black shadow-sm">
+      <div className="mb-4 flex-1 min-w-0 rounded-lg border border-gray-200 dark:border-gray-700 bg-[#FAFAFA] dark:bg-black shadow-sm">
         <button
           type="button"
           className="flex w-full flex-wrap items-center gap-2 px-3 py-2.5 text-left cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900/40 transition-colors"
@@ -121,7 +121,7 @@ export function StepCard({ step, isLast }: StepCardProps) {
                 <p className="mb-1 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                   Arguments
                 </p>
-                <pre className="overflow-x-auto rounded bg-gray-50 dark:bg-gray-800 p-2 text-xs leading-relaxed">
+                <pre className="overflow-x-auto w-full max-w-full rounded bg-gray-50 dark:bg-gray-800 p-2 text-xs leading-relaxed">
                   {formatData(step.toolArgs)}
                 </pre>
               </div>
@@ -132,7 +132,7 @@ export function StepCard({ step, isLast }: StepCardProps) {
                   {step.result.success ? "Result" : "Error"}
                 </p>
                 {step.result.success ? (
-                  <pre className="overflow-x-auto rounded bg-gray-50 dark:bg-gray-800 p-2 text-xs leading-relaxed">
+                  <pre className="overflow-x-auto w-full max-w-full rounded bg-gray-50 dark:bg-gray-800 p-2 text-xs leading-relaxed">
                     {truncate(formatData(step.result.data))}
                   </pre>
                 ) : (

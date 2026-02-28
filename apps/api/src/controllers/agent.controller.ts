@@ -36,6 +36,13 @@ export const agentStart = async (req: AuthRequest, res: Response) => {
   } catch (err) {
     const error = err instanceof Error ? err.message : "Unknown error";
     emit({ type: "error", data: { error } });
+
+    return res.status(500).json({
+      success: false,
+      data: null,
+      message: "INTERNAL_SERVER_ERROR"
+    })
+
   } finally {
     clearInterval(keepAlive);
     res.end();
@@ -94,7 +101,7 @@ export const runAgentById = async (req: AuthRequest, res: Response) => {
     return;
   }
 
-  res.json({
+  return res.json({
     run: {
       id: run.id,
       task: run.task,
