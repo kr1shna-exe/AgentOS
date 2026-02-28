@@ -20,7 +20,7 @@ export function Message({ role, content, timestamp }: MessageProps) {
 
   if (isUser) {
     return (
-      <div className="flex justify-end px-6 py-4 bg-[#FAFAFA] dark:bg-black">
+      <div className="flex justify-end px-4 py-4 bg-[#FAFAFA] dark:bg-black">
         <div className="w-full flex justify-end">
           <div className="inline-block max-w-[85%] rounded-2xl bg-[#E5E7EB] dark:bg-gray-700 px-4 py-2.5 text-sm text-gray-900 dark:text-gray-100">
             {content}
@@ -31,7 +31,7 @@ export function Message({ role, content, timestamp }: MessageProps) {
   }
 
   return (
-    <div className="flex px-6 py-4 bg-[#FAFAFA] dark:bg-black">
+    <div className="flex px-4 py-4 bg-[#FAFAFA] dark:bg-black">
       <div className="flex gap-3 w-full">
         <div className="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden flex items-center justify-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -58,3 +58,4 @@ export function Message({ role, content, timestamp }: MessageProps) {
     </div>
   )
 }
+

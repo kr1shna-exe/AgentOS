@@ -53,7 +53,7 @@ export function ChatContainer({ task, status, steps, result, error, onSendMessag
 
             {/* Agent response: steps + result - default background, AgentOS logo */}
             {(steps.length > 0 || result || error || isRunning) && (
-              <div className="flex px-6 py-4 bg-[#FAFAFA] dark:bg-black">
+              <div className="flex px-4 py-4 bg-[#FAFAFA] dark:bg-black">
                 <div className="flex gap-3 w-full">
                   <div className="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden bg-transparent flex items-center justify-center">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -163,3 +163,4 @@ export function ChatContainer({ task, status, steps, result, error, onSendMessag
     </div>
   )
 }
+
