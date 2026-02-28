@@ -12,8 +12,12 @@ const PORT = env.PORT ?? 8000;
 app.use(express.json());
 
 const ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
+  "http://localhost:3000",
+  "https://agent-os-web.vercel.app",
+  "https://tryagentos.vercel.app",
+  ...(env.NEXT_PUBLIC_APP_URL ? [env.NEXT_PUBLIC_APP_URL] : []),
+];
+
 app.use(
     cors({
         origin: ALLOWED_ORIGINS,

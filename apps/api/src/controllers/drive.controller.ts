@@ -8,14 +8,19 @@ export const syncDrive = async (req: AuthRequest, res: Response) => {
     res.write(`data: ${JSON.stringify(event)}\n\n`);
   };
 
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  res.flushHeaders();
+
+  // Keepalive ping every 20s to prevent proxy idle-timeout from killing the stream
+  const keepalive = setInterval(() => {
+    res.write(": ping\n\n");
+  }, 20_000);
+
   try {
     const userId = req.user!.userId;
     const mode = req.body.mode === "incremental" ? "incremental" : "full";
-
-    res.setHeader("Content-Type", "text/event-stream");
-    res.setHeader("Cache-Control", "no-cache");
-    res.setHeader("Connection", "keep-alive");
-    res.flushHeaders();
 
     for await (const syncEvent of runDriveSync(userId, mode)) {
       emit(syncEvent);
@@ -25,6 +30,7 @@ export const syncDrive = async (req: AuthRequest, res: Response) => {
     const error = err instanceof Error ? err.message : "Sync failed";
     emit({ type: "error", error });
   } finally {
+    clearInterval(keepalive);
     res.end();
   }
 };
