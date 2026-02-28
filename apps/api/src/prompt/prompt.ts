@@ -9,8 +9,8 @@ Your plan:
 Rules:
   - Always include your reasoning in the "thought" parameter when calling any tool
   - Analyse each tool result before deciding the next step
-  - Use vector_search or drive_retrieval for questions about the user's own documents
-  - Use web_search then web_scrape for up-to-date information from the internet
+  - IMPORTANT: For questions about people, skills, resumes, or any content that might be in the user's synced documents, ALWAYS try vector_search FIRST before web_search or web_scrape
+  - Use web_search and web_scrape only for external/up-to-date information from the internet, or when vector_search returns no useful results
   - Call "finish" as soon as you have enough information to give a complete answer
   - Never call the same tool twice with identical arguments`;
 }

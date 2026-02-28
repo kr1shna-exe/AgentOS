@@ -23,7 +23,7 @@ export function ChatContainer({ task, status, steps, result, error, onSendMessag
   }, [task, steps, result, status])
 
   const isRunning = status === "planning" || status === "executing"
-  const hasContent = task || steps.length > 0 || result || error
+  const hasContent = task || steps.length > 0 || result || error || isRunning
 
   return (
     <div className="flex flex-col h-screen">
@@ -52,7 +52,7 @@ export function ChatContainer({ task, status, steps, result, error, onSendMessag
             )}
 
             {/* Agent response: steps + result - default background, AgentOS logo */}
-            {(steps.length > 0 || result || error) && (
+            {(steps.length > 0 || result || error || isRunning) && (
               <div className="flex px-6 py-4 bg-[#FAFAFA] dark:bg-black">
                 <div className="flex gap-3 w-full">
                   <div className="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden bg-transparent flex items-center justify-center">
@@ -92,17 +92,47 @@ export function ChatContainer({ task, status, steps, result, error, onSendMessag
                       </div>
                     )}
 
-                    {/* Loading indicator */}
+                    {/* Loading indicator - 3-dot animation */}
                     {isRunning && (
-                      <div className="rounded-xl border border-gray-200 dark:border-gray-700 px-4 py-6 bg-[#FAFAFA] dark:bg-black">
-                        <Loading size="sm" />
+                      <div className="rounded-xl border border-gray-200 dark:border-gray-700 px-4 py-6 bg-[#FAFAFA] dark:bg-black flex items-center justify-center">
+                        <Loading variant="dots" size="sm" />
                       </div>
                     )}
 
                     {/* Final answer - default background, no white bubble */}
                     {result && (
-                      <div className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-wrap">
-                        {result.answer}
+                      <div className="space-y-4">
+                        <div className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-wrap">
+                          {result.answer}
+                        </div>
+                        {/* Citations at the very end */}
+                        {result.citations && result.citations.length > 0 && (
+                          <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+                              Sources
+                            </p>
+                            <ul className="space-y-1.5 text-xs">
+                              {result.citations.map((c, i) => (
+                                <li key={i}>
+                                  {c.url ? (
+                                    <a
+                                      href={c.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-sky-600 dark:text-sky-400 hover:underline truncate block"
+                                    >
+                                      {c.title || c.fileName || "Source"}
+                                    </a>
+                                  ) : (
+                                    <span className="text-gray-600 dark:text-gray-300">
+                                      {c.title || c.fileName || "Source"}
+                                    </span>
+                                  )}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </div>
                     )}
 

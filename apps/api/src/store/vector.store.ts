@@ -3,7 +3,7 @@ import { qdrant } from "../config/qdrant";
 import type { Citation } from "../agent/types";
 
 const COLLECTION = "drive_documents";
-const VECTOR_SIZE = 768;
+const VECTOR_SIZE = 3072;
 
 interface ChunkPayload {
   userId: string;
