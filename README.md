@@ -4,6 +4,10 @@ AgentOS is an autonomous AI agent platform that accepts natural language tasks, 
 
 It integrates Google Drive with OAuth, performs document ingestion and semantic search using embeddings, and presents structured, source-cited responses through a modern chat-based UI.
 
+## Architecture of AgentOS
+![Architecture](apps/web/assets/Images/architecture.png)
+
+
 ## Live Preview
 ![Demo](apps/web/assets/Images/demo.png)
 
