@@ -10,10 +10,11 @@ COPY apps/api ./apps/api
 # Install dependencies
 RUN bun install --frozen-lockfile 2>/dev/null || bun install
 
-# Generate Prisma client (DATABASE_URL is not needed for generate, but
-# prisma.config.ts loads dotenv so we supply a dummy to avoid any env errors)
-RUN DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder" \
-    cd packages/database && bunx prisma generate
+# prisma generate reads the schema (which uses env("DATABASE_URL")).
+# Provide a dummy value at build time so the build succeeds without a real DB.
+# The real DATABASE_URL is injected at runtime by the platform.
+ARG DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
+RUN cd packages/database && bunx prisma generate
 
 WORKDIR /app/apps/api
 
