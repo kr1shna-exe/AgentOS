@@ -21,5 +21,6 @@ WORKDIR /app/apps/api
 # App Platform injects PORT (default 8080)
 EXPOSE 8080
 
-# Run migrations and start API (DATABASE_URL set at runtime)
-CMD bunx prisma migrate deploy --schema=../../packages/database/prisma/schema.prisma && bun run src/index.ts
+# Run migrations from the database package dir (prisma.config.ts must be in CWD for Prisma v7),
+# then start the API from its own dir.
+CMD cd /app/packages/database && bunx prisma migrate deploy && cd /app/apps/api && bun run src/index.ts
