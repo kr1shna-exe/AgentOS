@@ -33,7 +33,7 @@ export function Message({ role, content, timestamp }: MessageProps) {
   return (
     <div className="flex px-4 py-4 bg-[#FAFAFA] dark:bg-black">
       <div className="flex gap-3 w-full">
-        <div className="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden flex items-center justify-center">
+        <div className="shrink-0 w-8 h-8 rounded-full overflow-hidden flex items-center justify-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/agentos-logo.png"

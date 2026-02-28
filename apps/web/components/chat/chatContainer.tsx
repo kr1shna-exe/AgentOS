@@ -10,7 +10,7 @@ import { StepCard } from "./stepCard"
 import type { Step, AgentResult } from "@/lib/types"
 import { RunStatus, ChatContainerProps } from "@/types/chat.type"
 
-const CHAT_MAX_WIDTH = "max-w-2xl"
+const CHAT_MAX_WIDTH = "max-w-full sm:max-w-2xl"
 
 export function ChatContainer({ task, status, steps, result, error, onSendMessage, sidebarOpen = true }: ChatContainerProps) {
   const messagesEndRef = React.useRef<HTMLDivElement>(null)
@@ -55,7 +55,7 @@ export function ChatContainer({ task, status, steps, result, error, onSendMessag
             {(steps.length > 0 || result || error || isRunning) && (
               <div className="flex px-4 py-4 bg-[#FAFAFA] dark:bg-black">
                 <div className="flex gap-3 w-full">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden bg-transparent flex items-center justify-center">
+                  <div className="shrink-0 w-8 h-8 rounded-full overflow-hidden bg-transparent flex items-center justify-center">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/agentos-logo.png"
@@ -154,8 +154,8 @@ export function ChatContainer({ task, status, steps, result, error, onSendMessag
 
       <div
         className={cn(
-          "fixed bottom-0 right-0 transition-[left] duration-300",
-          sidebarOpen ? "left-64" : "left-0"
+          "fixed bottom-0 right-0 w-full transition-[left] duration-300",
+          sidebarOpen ? "left-0 lg:left-64" : "left-0"
         )}
       >
         <ChatInput onSend={onSendMessage} maxWidthClass={CHAT_MAX_WIDTH} />

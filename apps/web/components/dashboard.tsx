@@ -23,8 +23,8 @@ export function Dashboard() {
       {/* Chat input fixed at bottom center */}
       <div
         className={cn(
-          "fixed bottom-0 right-0 transition-[left] duration-300",
-          isOpen ? "left-64" : "left-0"
+          "fixed bottom-0 right-0 w-full transition-[left] duration-300",
+          isOpen ? "left-0 lg:left-64" : "left-0"
         )}
       >
         <ChatInput onSend={handleSendMessage} maxWidthClass="max-w-2xl" />

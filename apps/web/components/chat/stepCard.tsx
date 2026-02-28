@@ -83,7 +83,7 @@ export function StepCard({ step, isLast }: StepCardProps) {
       <div className="mb-4 flex-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-[#FAFAFA] dark:bg-black shadow-sm">
         <button
           type="button"
-          className="flex w-full items-center gap-2 px-3 py-2.5 text-left"
+          className="flex w-full flex-wrap items-center gap-2 px-3 py-2.5 text-left cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900/40 transition-colors"
           onClick={() => setExpanded((v) => !v)}
           aria-expanded={expanded}
         >
